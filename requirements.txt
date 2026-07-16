@@ -1,0 +1,13 @@
+# Dev dependencies (runtime deps for each Cloud Function are in functions/*/requirements.txt)
+requests>=2.31.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+google-cloud-storage>=2.14.0
+google-cloud-bigquery>=3.17.0
+google-cloud-secret-manager>=2.18.0
+
+# Testing / linting
+pytest>=8.0.0
+pytest-cov>=4.1.0
+responses>=0.24.0
+ruff>=0.4.0

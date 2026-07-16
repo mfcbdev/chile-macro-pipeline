@@ -1,0 +1,42 @@
+# BDE (Banco Central de Chile) series to ingest.
+#
+# Codes must be verified against the official catalog before deployment:
+#   https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/Webservices/series.xlsx
+# Run scripts/validate_series.py to confirm each id resolves against the API.
+#
+# Fields per series:
+#   id          — BDE series code (timeseries parameter to GetSeries)
+#   name        — human-readable label (Spanish)
+#   unit        — measurement unit for the series
+#   description — optional longer description for docs / dim_series
+
+series:
+  daily:
+    - id: "F073.TCO.PRE.Z.D"
+      name: "Dólar observado"
+      unit: "CLP/USD"
+      description: "Tipo de cambio observado publicado por el Banco Central de Chile."
+    - id: "F073.UFF.PRE.Z.D"
+      name: "Unidad de Fomento (UF)"
+      unit: "CLP"
+      description: "Valor diario de la Unidad de Fomento."
+    - id: "F022.TPM.TIN.D001.NO.Z.D"
+      name: "Tasa de política monetaria"
+      unit: "porcentaje"
+      description: "TPM nominal diaria."
+
+  monthly:
+    - id: "F074.IPC.VAR.Z.Z.C.M"
+      name: "IPC variación mensual"
+      unit: "porcentaje"
+      description: "Variación mensual del Índice de Precios al Consumidor."
+    - id: "F032.IMC.IND.Z.Z.EP18.Z.Z.0.M"
+      name: "IMACEC"
+      unit: "índice"
+      description: "Imacec empalmado, serie original (índice 2018=100)."
+
+  quarterly:
+    - id: "F032.PIB.FLU.R.CLP.EP18.Z.Z.0.T"
+      name: "PIB real"
+      unit: "millones CLP encadenados"
+      description: "Producto Interno Bruto real, series de referencia encadenadas."
