@@ -93,7 +93,7 @@ Reuses the production transform path — no separate code, and validates the tri
 ## 6. Deployment topology & IAM
 
 - **Service accounts** (least-privilege, one per function):
-  - `sa-ingest`: `secretmanager.secretAccessor` (on BDE creds only), `storage.objectCreator` (on raw bucket prefix).
+  - `sa-ingest`: `secretmanager.secretAccessor` (on BDE creds only), `storage.objectCreator` + `storage.objectViewer` (on raw bucket — viewer needed for the `blob.exists()` idempotency short-circuit).
   - `sa-transform-load`: `storage.objectViewer` (raw), `bigquery.dataEditor` (raw dataset).
 - **Bucket lifecycle:** raw files kept indefinitely (KB-sized). Optional: Nearline after 90 days.
 - **Cost:** all in free tier for portfolio-scale use.

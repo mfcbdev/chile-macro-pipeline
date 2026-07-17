@@ -151,10 +151,17 @@ done
 # -----------------------------------------------------------------------------
 echo "==> Granting IAM roles..."
 
-# Ingest SA: write to raw bucket
+# Ingest SA: write to raw bucket + read to support the blob.exists() idempotency check.
+# Without objectViewer, the ingest function's short-circuit ("skip BDE call if file already
+# exists in GCS") fails with a 403 instead of returning False, breaking every ingest.
 gcloud storage buckets add-iam-policy-binding "gs://${GCS_BUCKET}" \
     --member="serviceAccount:${INGEST_SA}" \
     --role="roles/storage.objectCreator" \
+    --quiet >/dev/null
+
+gcloud storage buckets add-iam-policy-binding "gs://${GCS_BUCKET}" \
+    --member="serviceAccount:${INGEST_SA}" \
+    --role="roles/storage.objectViewer" \
     --quiet >/dev/null
 
 # Transform-load SA: read from raw bucket
@@ -163,13 +170,16 @@ gcloud storage buckets add-iam-policy-binding "gs://${GCS_BUCKET}" \
     --role="roles/storage.objectViewer" \
     --quiet >/dev/null
 
-# Transform-load SA: dataEditor on raw dataset (for MERGE + staging tables)
-bq --project_id="${GCP_PROJECT_ID}" add-iam-policy-binding \
+# Transform-load SA: dataEditor + jobUser at PROJECT level.
+# We use gcloud (not `bq add-iam-policy-binding`, which is flaky across bq versions
+# and can hard-fail the script under `set -e`). Project-level dataEditor is broader
+# than dataset-scoped, but the SA is single-purpose so the blast radius is unchanged.
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
     --member="serviceAccount:${TRANSFORM_SA}" \
     --role="roles/bigquery.dataEditor" \
-    "${GCP_PROJECT_ID}:raw" >/dev/null
+    --condition=None \
+    --quiet >/dev/null
 
-# Transform-load SA: jobUser at project level (needed to run MERGE queries)
 gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
     --member="serviceAccount:${TRANSFORM_SA}" \
     --role="roles/bigquery.jobUser" \
