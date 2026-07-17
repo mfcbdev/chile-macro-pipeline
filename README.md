@@ -142,6 +142,14 @@ Writes 5 years of raw JSON to GCS. The `transform_load` function processes each 
 
 ---
 
+## Companion visualization
+
+[**chile-macro-dashboard**](https://github.com/mfcbdev/chile-macro-dashboard) — a Next.js 15 + Cloud Run frontend that reads the `analytics.v_*` views directly from BigQuery (no separate API), rendering six KPIs and per-series detail charts with ES/EN + dark/light toggles.
+
+**Live:** https://chile-macro-dashboard-636532693335.us-central1.run.app
+
+---
+
 ## Development
 
 ```bash
