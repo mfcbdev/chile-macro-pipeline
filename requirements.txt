@@ -1,10 +1,17 @@
-# Dev dependencies (runtime deps for each Cloud Function are in functions/*/requirements.txt)
+# Dev + test dependencies. Each Cloud Function's runtime deps live in
+# functions/*/requirements.txt (deployed alongside the function). This file
+# is the superset used by the local venv and CI so that all tests can import
+# both function packages (including their entry-point decorators).
 requests>=2.31.0
 pyyaml>=6.0.1
 python-dotenv>=1.0.0
 google-cloud-storage>=2.14.0
 google-cloud-bigquery>=3.17.0
 google-cloud-secret-manager>=2.18.0
+
+# Needed to import functions/ingest/main.py and functions/transform_load/main.py in tests
+functions-framework>=3.5.0
+cloudevents>=1.10.0
 
 # Testing / linting
 pytest>=8.0.0
